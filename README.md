@@ -2,7 +2,7 @@
 
 stm32の開発を楽にしたいという思想から生まれたマルチスレッドを実現するためのOS
 
-最終的に
+最終的なユーザーコード予定
 
 ```cpp
 #include "naga-OS.h"
@@ -18,12 +18,12 @@ class ProcessA : public Process
     Mutex mutex;
     ConditionVariable sv{functionObject};
 public:
-    void Setup() override
+    Task Setup() override
     {
         // Setup処理
     }
 
-    void Loop() override
+    Task Loop() override
     {
         // Loop処理
     }
@@ -34,12 +34,12 @@ class ProcessB : public Process
     BinarySemaphore bs;
     CountingSemaphore<3> cs;
 public:
-    void Setup() override
+    Task Setup() override
     {
         // Setup処理
     }
 
-    void Loop() override
+    Task Loop() override
     {
         // Loop処理
     }
@@ -48,8 +48,12 @@ public:
 int main() 
 {
     using system = System<ShareObject>; // 共有オブジェクトの設定
+    
+    system::setFrequency(500);//500Hz
 
-    system::Add<A>(Priority::High); // スレッドの追加
-    system::Add<B>(/* 何も書かない場合はPriority::Normal */); // スレッドの追加
+    system::Add<A>(Args...).setPriority(Priority::High).setStackSize(1024); // スレッドの追加(優先度高、stackの量1024KB)
+    system::Add<B>(); // スレッドの追加(何も書かない場合はコンストラクタの引数なし、優先度普通、stackの量は256KB)
+
+    system.launch();
 }
 ```
