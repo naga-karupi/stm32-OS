@@ -1,11 +1,11 @@
-# naga OS
+# stm32 OS
 
 stm32の開発を楽にしたいという思想から生まれたマルチスレッドを実現するためのOS
 
-最終的なユーザーコード予定
+最終的なユーザーコード案
 
 ```cpp
-#include "naga-OS.h"
+#include "stm32-OS.h"
 
 struct ShareObject
 {
