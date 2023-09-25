@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include <mutex>
-
 /**
  * @brief ミューテックスの本体
  * 
@@ -53,6 +51,7 @@ public:
  */
 class LockGuard
 {
+    Mutex m_mutex;
 public:
     LockGuard(Mutex&);
     ~LockGuard();
