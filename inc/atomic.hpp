@@ -167,4 +167,4 @@ void Atomic<Copyable>::Destroy()
     m_entity.release();
 }
 
-#undef CP
+#undef COPYABLE
