@@ -21,7 +21,7 @@ public:
      * @brief Construct a new Atomic object
      * 
      */
-    Atomic(const Copyable);
+    Atomic(const Copyable&);
 
     /**
      * @brief Construct a new Atomic object
@@ -47,7 +47,7 @@ public:
      * 
      * @param cp 書き込む値
      */
-    void Store(const Copyable cp);
+    void Store(const Copyable& cp);
 
     /**
      * @brief 値を読み出す
@@ -71,7 +71,7 @@ public:
      * @param desired 入れ替える値
      * @return Copyable もと入っている値
      */
-    Copyable Exchange(const Copyable desired);
+    Copyable Exchange(const Copyable& desired);
 
     /**
      * @brief 保持している値が期待した値だった場合、保持している値を更新し、trueを返す
@@ -82,12 +82,89 @@ public:
      * @return true 値の更新に成功
      * @return false 値の更新に失敗
      */
-    bool CompareExchange(const Copyable& expected, const Copyable desired);
+    bool CompareExchange(const Copyable& expected, const Copyable& desired);
+
+    /**
+     * @brief 保持している値を破棄する
+     * 
+     */
+    void Destroy();
 
 private:
-    Copyable m_entity;
+    std::unique_ptr<Copyable> m_entity;
 
     Atomic(Atomic&) = delete;
     void operator = (Atomic&) = delete;
     void operator = (Atomic&&) = delete;
 };
+
+#define COPYABLE template<std::copyable Copyable>
+
+COPYABLE
+Atomic<Copyable>::Atomic(const Copyable &cp)
+  : m_entity(std::make_unique<Copyable>(cp))
+{
+
+}
+
+COPYABLE
+Atomic<Copyable>::Atomic(const Atomic&& cp)
+  : m_entity(std::make_unique<Copyable>(cp.Load()))
+{
+    cp.Destroy();
+}
+
+COPYABLE
+bool Atomic<Copyable>::isLockFree()
+{
+    return true;
+}
+
+COPYABLE
+void Atomic<Copyable>::Store(const Copyable& cp)
+{
+    m_entity.reset(new Copyable(cp));
+}
+
+COPYABLE
+Copyable Atomic<Copyable>::Load()
+{
+    return m_entity->get();
+}
+
+COPYABLE
+template <typename T>
+Atomic<Copyable>::operator T()
+{
+    return m_entity->get();
+}
+
+COPYABLE
+Copyable Atomic<Copyable>::Exchange(const Copyable& cp)
+{
+    Copyable ret = m_entity->get();
+    m_entity.reset(new Copyable(cp));
+    return ret;
+}
+
+COPYABLE
+bool Atomic<Copyable>::CompareExchange(const Copyable& expected, const Copyable& desired)
+{
+    if(expected == m_entity->get()) 
+    {
+        m_entity->reset(desired);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+COPYABLE
+void Atomic<Copyable>::Destroy()
+{
+    m_entity.release();
+}
+
+#undef CP
