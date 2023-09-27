@@ -6,11 +6,11 @@
 ```mermaid
 classDiagram
 
-    class System{
+    class System {
         
     }
 
-    class Atomic{
+    class Atomic {
         Atomic(Copyable)
         Atomic(Atomic&&) only move ok
         bool isLockFree()
@@ -23,35 +23,35 @@ classDiagram
 
     }
 
-    class Semaphore{
+    class Semaphore {
+        
+    }
+
+    class YieldHandle {
+        JudgeReturn()*
+    }
+
+    class Task {
 
     }
 
-    class YieldHandle{
-
+    class ConditionVariable {
+        coroutine周りの定義
     }
 
-    class Task{
-
-    }
-
-    class ConditionVariable{
-
-    }
-
-    class Mutex{
+    class Mutex {
         Mutex()
         void Lock()
         bool TryLock()
         void Unlock()
     }
 
-    class LockGuard{
+    class LockGuard {
         LockGuard(Mutex)
         void TransformMutex()
     }
 
-    class any_process{
+    class any_process {
         user code
     }
 
