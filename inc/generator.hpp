@@ -18,8 +18,17 @@ class Generator
 {
 public:
 	struct promise_type;
+
+	/**
+	 * @brief エイリアスの設定
+	 * 
+	 */
 	using Handle = std::coroutine_handle<promise_type>;
 
+	/**
+	 * @brief コルーチンの使用に必要な構造体
+	 * 
+	 */
 	struct promise_type
 	{
 		YieldHandle* pyh;
@@ -60,22 +69,43 @@ public:
 		}
 	};
 
-	Generator(const Generator&)
+	/**
+	 * @brief Construct a new Generator object
+	 * 
+	 * @param Gen Generator型左辺値オブジェクト
+	 */
+	Generator(const Generator& Gen) : handle(Gen.handle)
 	{
 
 	}
 
-	Generator(Generator&& rGen)
+	/**
+	 * @brief Construct a new Generator object
+	 * 
+	 * @param rGen Generator型右辺値オブジェクト
+	 */
+	Generator(const Generator&& rGen)
 	  : handle(rGen.handle)
 	{
 		rGen.handle = nullptr;
 	} 
 
+	/**
+	 * @brief タスクの実行
+	 * 
+	 * @return true 実行成功
+	 * @return false 実行失敗
+	 */
 	bool DoTask()
 	{
 		return handle ? (handle.resume(), not handle.done()) : false;
 	}
 
+	/**
+	 * @brief Get the Handle object
+	 * 
+	 * @return Handle& Generator型の保有しているハンドル
+	 */
 	Handle& GetHandle()
 	{
 		return handle;
