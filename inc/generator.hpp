@@ -34,39 +34,23 @@ public:
 		YieldHandle* pyh;
 		static auto get_return_object_an_allocation_failure()
 		{
-			return Generator{ nullptr }; 
+			return Generator{ nullptr };
 		}
 
 		auto get_return_object()
 		{
-			return Generator(Handle::from_promise(*this)); 
+    		return Generator(Handle::from_promise(*this));
 		}
 
-		std::suspend_always initial_suspend() const noexcept
-		{
-			return {};
-		}
+		std::suspend_always initial_suspend() const noexcept;
 		
-		std::suspend_always final_suspend() const noexcept
-		{
-			return {};
-		}
+		std::suspend_always final_suspend() const noexcept;
 
-		void unhandled_exception()
-		{
-			 /*TODO*/
-		}
+		void unhandled_exception();
 
-		void return_void() const noexcept
-		{
+		void return_void() const noexcept;
 
-		}
-
-		auto yield_value(YieldHandle& yh) noexcept
-		{
-			pyh = &yh;
-			return std::suspend_always{};
-		}
+		std::suspend_always yield_value(YieldHandle& yh) noexcept;
 	};
 
 	/**
@@ -74,21 +58,14 @@ public:
 	 * 
 	 * @param Gen Generator型左辺値オブジェクト
 	 */
-	Generator(const Generator& Gen) : handle(Gen.handle)
-	{
-
-	}
+	Generator(const Generator& Gen);
 
 	/**
 	 * @brief Construct a new Generator object
 	 * 
 	 * @param rGen Generator型右辺値オブジェクト
 	 */
-	Generator(const Generator&& rGen)
-	  : handle(rGen.handle)
-	{
-		rGen.handle = nullptr;
-	} 
+	Generator(Generator&& rGen);
 
 	/**
 	 * @brief タスクの実行
@@ -96,26 +73,17 @@ public:
 	 * @return true 実行成功
 	 * @return false 実行失敗
 	 */
-	bool DoTask()
-	{
-		return handle ? (handle.resume(), not handle.done()) : false;
-	}
+	bool DoTask();
 
 	/**
 	 * @brief Get the Handle object
 	 * 
 	 * @return Handle& Generator型の保有しているハンドル
 	 */
-	Handle& GetHandle()
-	{
-		return handle;
-	}
+	Handle& GetHandle();
 
 private:
-	Generator(Handle h) : handle(h)
-	{
-
-	}
+	Generator(Handle h);
 	
 	Handle handle;
 	
