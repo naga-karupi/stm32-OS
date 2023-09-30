@@ -9,6 +9,8 @@
  * 
  */
 
+#include <exception>
+
 #include "inc/generator.hpp"
 
 std::suspend_always Generator::promise_type::initial_suspend() const noexcept
@@ -23,7 +25,7 @@ std::suspend_always Generator::promise_type::final_suspend() const noexcept
 
 void Generator::promise_type::unhandled_exception()
 {
-    /*TODO*/
+    std::terminate();
 }
 
 void Generator::promise_type::return_void() const noexcept
