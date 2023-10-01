@@ -7,48 +7,82 @@
 classDiagram
 
     class System {
-        
+        - ReadyTaskList
+        - BlockTaskList
+        - YieldedTaskList
+        - SetupList
+
+        - Scheduler
+        - Dispatcher
+
+        + AddTask(task : Task)
+        + AddSemaphore(semaphore : Semaphore)
+        + AddMutex(mutex : Mutex)
     }
 
     class Atomic {
-        Atomic(Copyable)
-        Atomic(Atomic&&) only move ok
-        bool isLockFree()
-        void Store(Copyable)
-        Copyable Load()
-        operator T()
-        Copyable Exchange(Copyable);
-        bool CompareExchange(Copyable, Copyable)
-        void Destroy()
+        - m_entity : unique_ptr<Copyable> 
+        + Atomic(Copyable)
+        + Atomic(Atomic&&) only move ok
+        + isLockFree() : bool
+        + Store(Copyable) : void
+        + Load() : Copyable
+        + operator T()
+        + Exchange(Copyable) : Copyable
+        + CompareExchange(expected : Copyable, desired : Copyable) : bool
+        + Destroy() : void
 
     }
 
-    class Semaphore {
+    class CountingSemaphore {
+        AcquireとReleaseはマクロで定義
+        - Count
+        + Increment() : void
+        + Decrement() : void
+        + TryAcquire() : bool
+
+        + Max()$ : size_t
         
     }
 
+    class BinarySemaphore {
+        CountingSemaphoreのカウントの最大値が1の場合と同じ
+    }
+
     class YieldHandle {
-        JudgeReturn()*
+        <<interface>>
+        JudgeReturn()* : bool
+    }
+
+    class Generator {
+        +coroutine周辺の実装
     }
 
     class Task {
+        - Priority : size_t
+        - ID : size_t
 
+        + SetPriority(priority : size_t)
+        + GetPriority() : size_t
+        + SetID(id : size_t) : void
+        + GetID() : size_t
     }
 
     class ConditionVariable {
-        coroutine周りの定義
+
     }
 
     class Mutex {
-        Mutex()
-        void Lock()
-        bool TryLock()
-        void Unlock()
+        + Mutex()
+        + Lock() : void
+        + TryLock() : bool
+        + Unlock() : void
+        + OwnLock() : bool
     }
 
     class LockGuard {
-        LockGuard(Mutex)
-        void TransformMutex()
+        + LockGuard(Mutex)
+        + TransformMutex() : void
     }
 
     class any_process {
