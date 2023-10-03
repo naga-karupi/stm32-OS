@@ -1,4 +1,4 @@
-#include "generator.hpp"
+#include "task.hpp"
 
 #include <iostream>
 #include <gtest/gtest.h>
@@ -17,7 +17,7 @@ public:
 
 A a;
 
-Generator t() 
+Task t() 
 {
     co_yield a;
     co_yield a;
@@ -27,7 +27,7 @@ Generator t()
 
 A a2;
 
-Generator s()
+Task s()
 {
     co_yield a2;
     co_yield a2;
