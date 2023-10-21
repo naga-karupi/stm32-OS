@@ -40,7 +40,7 @@ template<size_t SIZE>
 class TaskPriorityQueue : public TaskPriorityQueueInternal
 {
     Task m_tasks[SIZE];
-    size_t m_size;
+    size_t m_size = 0;
 
     void Enqueue(Task&& rTask)
     {
@@ -52,12 +52,12 @@ class TaskPriorityQueue : public TaskPriorityQueueInternal
 
     Task Dequeue()
     {
-        Task&& r_task = std::move(m_tasks[0]);
+        Task r_task = std::move(m_tasks[0]);
 
-        DequeueSwap(m_size);
+        DequeueSwap(0);
 
         --m_size;
-        return std::move(r_task);
+        return r_task;
     }
 
     void EnqueueSwap(const size_t child)
@@ -80,6 +80,9 @@ class TaskPriorityQueue : public TaskPriorityQueueInternal
         const auto new_size = m_size - 1;
         const auto child_1 = parent * 2 + 1;
         const auto child_2 = parent * 2 + 2;
+
+        if(new_size == 0)
+            return;
 
         if(parent == 0)
             m_tasks[0] = std::move(m_tasks[new_size]);
