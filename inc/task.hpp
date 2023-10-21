@@ -14,6 +14,8 @@
 #include "handle.hpp"
 #include "generator.hpp"
 
+#pragma once
+
 /**
  * @brief ユーザ側で定義する関数の型
  * 
