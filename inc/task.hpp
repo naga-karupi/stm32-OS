@@ -25,16 +25,17 @@ class Task : public Generator
     size_t m_depth;
     float m_frequency;
 
-    bool ready;
+    bool m_ready;
 
 public:
+    Task(void);
     Task(Task&&);
     Task(Generator&&);
 
     void operator=(Task&&);
     void operator=(Generator&&);
 
-    bool Init(size_t priority, size_t ID, size_t depth, float frequency);
+    bool Init(size_t priority, size_t ID, float frequency);
 
     size_t GetPriority();
     void SetPriority(size_t priority);
@@ -49,8 +50,8 @@ public:
     float GetFrequency();
     void SetFrequency(float frequency);
 
+    bool Available();
 
-    Task() = delete;
     Task(Task&) = delete;
     Task(Generator&) = delete;
     void operator=(Task&) = delete;
