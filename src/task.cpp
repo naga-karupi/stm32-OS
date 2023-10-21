@@ -62,9 +62,11 @@ bool Task::Init(size_t priority, size_t ID, float frequency)
         m_ID = ID;
 //        m_depth = depth;
         m_frequency = frequency;
-        m_ready = true;
 
-        return true;
+        if((bool)(*this))
+            m_ready = true;
+
+        return m_ready;
     }
 
     return false;    
