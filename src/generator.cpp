@@ -13,7 +13,7 @@
 
 #include "generator.hpp"
 
-Generator Generator::promise_type::get_return_object() const
+Generator Generator::promise_type::get_return_object()
 {
     return Generator(Handle::from_promise(*this));
 }
@@ -45,6 +45,12 @@ std::suspend_always Generator::promise_type::yield_value(YieldHandle& yh) noexce
     return {};
 }
 
+Generator::Generator()
+  : handle(nullptr)
+{
+
+}
+
 Generator::Generator(Generator&& rGen) 
   : handle(rGen.handle)
 {
@@ -53,7 +59,7 @@ Generator::Generator(Generator&& rGen)
 
 Generator::~Generator()
 {
-//    if(handle) handle.destroy();
+    if(handle) handle.destroy();
 }
 
 bool Generator::DoTask()

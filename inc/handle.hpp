@@ -13,6 +13,9 @@
  * @brief co_yieldの返り値として使う
  * 
  */
+
+#pragma once
+
 class YieldHandle
 {
 

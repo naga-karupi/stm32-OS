@@ -37,7 +37,7 @@ public:
 			return Generator{ nullptr };
 		}
 
-		Generator get_return_object() const;
+		Generator get_return_object();
 
 		std::suspend_always initial_suspend() const noexcept;
 		
@@ -49,6 +49,12 @@ public:
 
 		std::suspend_always yield_value(YieldHandle& yh) noexcept;
 	};
+
+	/**
+	 * @brief Construct a new Generator object
+	 * 
+	 */
+	Generator();
 
 	/**
 	 * @brief Construct a new Generator object
